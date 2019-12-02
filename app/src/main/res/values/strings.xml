@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Drunken Santa</string>
+    <string name="welcome">Welcome!</string>
+    <string name="drunk">DRUNKEN SANTA</string>
+    <string name="lives">LIVES</string>
+    <string name="gameOver">GAME OVER</string>
+    <string name="playAgain">PLAY AGAIN</string>
+    <string name="exitGame">EXIT GAME</string>
+    <string name="score">SCORE </string>
+</resources>
