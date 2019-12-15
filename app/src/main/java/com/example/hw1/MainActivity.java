@@ -24,6 +24,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.example.hw1.utilities.MySharedPreferences;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean soundOn = true;
 
     /* Set the user's accelerometer choice */
-    private boolean accelerometerIsOn = true;
+    private boolean accelerometerIsOn = false;
 
     /* Hold the user's current location */
     private Location userLocation;
@@ -74,6 +75,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         configGameWindow();
         setContentView(R.layout.activity_main);
+
+        // Setting permissions from the user to get the location
+        requestPermission();
+        accessClientLocation();
 
         // Getting the relevant widgets and views from the main xml
         startGame = findViewById(R.id.playButton);
@@ -86,9 +91,6 @@ public class MainActivity extends AppCompatActivity {
         introSong = MediaPlayer.create(this, R.raw.introsound);
         introSong.setLooping(true);
 
-        // Setting permissions from the user to get the location
-        requestPermission();
-        accessClientLocation();
 
         // Create new dialog which hold the setting in the whole game
         settingDialog = new Dialog(this);
@@ -107,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             user list of player which will he could choose.
          */
         startGame.setOnClickListener((e) -> {
-            if (userNameEditText.getText().toString().trim().length() > 0) {
+            if (userNameEditText.getText().toString().trim().length() > 0 && userLocation != null) {
                 startGame.setEnabled(false);
                 userNameEditText.setEnabled(false);
                 AlphaAnimation playerClick = new AlphaAnimation(1F, 0.6F);
@@ -204,9 +206,9 @@ public class MainActivity extends AppCompatActivity {
         accelerometer.setOnClickListener((v) -> {
             accelerometerIsOn = !accelerometerIsOn;
             if (accelerometerIsOn) {
-                Toast.makeText(getApplicationContext(), "Accelerometer OFF", Toast.LENGTH_SHORT).show();
-            } else {
                 Toast.makeText(getApplicationContext(), "Accelerometer ON", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "Accelerometer OFF ", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -265,10 +267,16 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (introSong != null) {
-            introSong.stop();
-        }
-        finish();
+        new AlertDialog.Builder(this)
+                .setMessage("Are you sure you want to exit?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", (dialog, id) -> {
+                    finish();
+                    if (introSong != null) {
+                        introSong.stop();
+                    }
+                })
+                .setNegativeButton("No", (dialog, id) -> dialog.cancel()).show();
     }
 
     @Override

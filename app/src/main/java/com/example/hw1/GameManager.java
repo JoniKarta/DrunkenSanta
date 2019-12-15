@@ -67,7 +67,8 @@ public class GameManager {
     private volatile boolean lifeExist = false;
   //  private SensorManager sensorManager;
 
-    public GameManager(Context context, GameView gameView, GameUser gameUser) {
+    public GameManager(Context context,GameView gameView, GameUser gameUser) {
+//        this.context = HelperContext.getContext();
         this.context = context;
         this.gamePlayView = gameView;
         this.gameUser = gameUser;
@@ -260,7 +261,7 @@ public class GameManager {
     }
 
 
-    public void updatePlayer(float x) {
+    public void playerAccelerometer(float x) {
         if (player.getX() <= gamePlayView.getWidth() - player.getWidth() && player.getX() >= 0) {
             player.setX(player.getX() - x);
             if (player.getX() >= gamePlayView.getWidth() - player.getWidth()) {
@@ -284,7 +285,7 @@ public class GameManager {
         Intent intent = new Intent(context, EndGameActivity.class);
         intent.putExtra(GamePlayFinals.USER_OBJECT, gameUser);
         context.startActivity(intent);
-        ((Activity) context).overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        ((GamePlayActivity)context).finish();
 
     }
 

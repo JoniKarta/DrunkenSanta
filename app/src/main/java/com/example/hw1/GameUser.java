@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class GameUser implements Comparable<GameUser>, Parcelable {
 
@@ -13,9 +14,9 @@ public class GameUser implements Comparable<GameUser>, Parcelable {
     private double latitude;
     private int playerCharacter;
 
-    public GameUser(String userName, double longitude,double latitude, int score, int playerCharacter) {
+    public GameUser(String userName, double longitude, double latitude, int score, int playerCharacter) {
         this.userName = userName;
-        this.longitude= longitude;
+        this.longitude = longitude;
         this.latitude = latitude;
         this.score = score;
         this.playerCharacter = playerCharacter;
@@ -61,10 +62,9 @@ public class GameUser implements Comparable<GameUser>, Parcelable {
         return playerCharacter;
     }
 
-    public void setScore(int score){
+    public void setScore(int score) {
         this.score = score;
     }
-
 
 
     @NonNull
@@ -76,6 +76,17 @@ public class GameUser implements Comparable<GameUser>, Parcelable {
     @Override
     public int compareTo(GameUser o) {
         return userName.compareTo(o.userName);
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (this == obj)
+            return true;
+        if(obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        return getUserName().equals(((GameUser) obj).userName);
     }
 
     @Override

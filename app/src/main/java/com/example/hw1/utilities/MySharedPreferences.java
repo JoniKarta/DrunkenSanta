@@ -3,6 +3,8 @@ package com.example.hw1.utilities;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
@@ -10,8 +12,10 @@ import com.example.hw1.GameUser;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -26,22 +30,23 @@ public class MySharedPreferences {
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void add(GameUser gameUser) {
-        //clearSharedPreferences();
-        if ((list = read()) != null) {
-            list.add(gameUser);
-        } else {
-            list = new ArrayList<>();
-            list.add(gameUser);
-        }
-        list.sort((o1, o2) -> {
-            if (o1.getScore() == o2.getScore()) {
-                return 0;
+    public void add(GameUser gameUser, Comparator<GameUser> comparator) {
+            list = read();
+            if (!list.contains(gameUser)) {
+                Log.i(null, "NOT INSIDE HERE");
+                list.add(gameUser);
+                list.sort(comparator);
+                writeDataToStorage(list);
+            } else {
+                int idx = list.indexOf(gameUser);
+                GameUser currentUser = list.get(idx);
+                if (currentUser.getScore() < gameUser.getScore()) {
+                    list.remove(currentUser);
+                    list.add(gameUser);
+                    list.sort(comparator);
+                    writeDataToStorage(list);
+                }
             }
-            return o1.getScore() < o2.getScore() ? 1 : -1;
-        });
-
-        writeDataToStorage(list);
     }
 
 
@@ -58,11 +63,12 @@ public class MySharedPreferences {
         String json = shared.getString("task_list", null);
         Type type = new TypeToken<ArrayList<GameUser>>() {
         }.getType();
-        list = gson.fromJson(json, type);
+        if((list = gson.fromJson(json, type)) == null)
+            list = new ArrayList<>();
         return list;
     }
 
-    private void clearSharedPreferences() {
+    public void clearSharedPreferences() {
         SharedPreferences.Editor editor = shared.edit();
         editor.clear();
         editor.apply();

@@ -8,6 +8,7 @@ import android.hardware.SensorEventListener2;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
@@ -30,8 +31,11 @@ public class GamePlayActivity extends AppCompatActivity implements SensorEventLi
 
     /* Check if the user want to hear song in the game */
     private boolean soundOn;
+
+    /* Handle the movement usig accelerometer */
     private SensorManager sensorManager;
 
+    private boolean accelerometerOn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +67,10 @@ public class GamePlayActivity extends AppCompatActivity implements SensorEventLi
         }
         GameUser gameUser = getIntent().getParcelableExtra(GamePlayFinals.USER_OBJECT);
         if (gameUser != null) {
-            gameManager = new GameManager(this, gameView, gameUser);
+            gameManager = new GameManager(this,gameView, gameUser);
             gameManager.generateGame(getIntent().getIntExtra(GamePlayFinals.GAME_LEVEL, GamePlayFinals.EASY));
         }
+
     }
 
     @Override
@@ -79,7 +84,6 @@ public class GamePlayActivity extends AppCompatActivity implements SensorEventLi
             gamePlaySong.stop();
         }
         Intent intent = new Intent(this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         finish();
@@ -88,8 +92,9 @@ public class GamePlayActivity extends AppCompatActivity implements SensorEventLi
     @Override
     protected void onStop() {
         super.onStop();
-        sensorManager.unregisterListener(this);
-
+        if(accelerometerOn) {
+            sensorManager.unregisterListener(this);
+        }
         if (gameManager != null && gamePlaySong != null) {
             gameManager.setGameStatus(false);
             gamePlaySong.pause();
@@ -110,7 +115,10 @@ public class GamePlayActivity extends AppCompatActivity implements SensorEventLi
     @Override
     protected void onStart() {
         super.onStart();
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
+        accelerometerOn = getIntent().getBooleanExtra(GamePlayFinals.ACCELEROMETER_SERVICE,false);
+        if(accelerometerOn){
+            sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
+        }
 
     }
 
@@ -126,8 +134,8 @@ public class GamePlayActivity extends AppCompatActivity implements SensorEventLi
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             accelerationX = event.values[0];
             //accelerationY = -event.values[1];
-            if (gameManager != null) {
-                gameManager.updatePlayer(accelerationX);
+            if (gameManager != null ) {
+                gameManager.playerAccelerometer(accelerationX);
             }
         }
 

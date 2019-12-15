@@ -19,7 +19,11 @@ public class GameRecyclerAdapter extends RecyclerView.Adapter<GameRecyclerAdapte
 
     public GameRecyclerAdapter(Context context, ArrayList<GameUser> exampleList) {
         this.context = context;
-        mExampleList = exampleList;
+        if(exampleList != null){
+            mExampleList = exampleList;
+        }else{
+            mExampleList = new ArrayList<>();
+        }
     }
 
     @NonNull

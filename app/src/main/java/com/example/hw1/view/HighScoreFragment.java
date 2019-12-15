@@ -22,14 +22,13 @@ import java.util.ArrayList;
 
 public class HighScoreFragment extends Fragment {
     View v;
-    private RecyclerView recyclerView;
-    private ArrayList<GameUser> list;
+    private ArrayList<GameUser> list = new ArrayList<>();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_highscore, container, false);
-        recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = v.findViewById(R.id.recyclerView);
         GameRecyclerAdapter exampleAdapter = new GameRecyclerAdapter(getContext(), list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(exampleAdapter);
@@ -40,8 +39,15 @@ public class HighScoreFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MySharedPreferences shared = new MySharedPreferences(getContext());
-        list = shared.read();
+        if(getContext() != null){
+            MySharedPreferences shared = new MySharedPreferences(getContext());
+            list = shared.read();
+        }
 
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+         v = null; // now cleaning up!
     }
 }
