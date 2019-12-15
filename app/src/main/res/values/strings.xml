@@ -1,10 +1,32 @@
 <resources>
+    <string name="google_maps_api_key">AIzaSyA49_FSkfy8XPe30G5_BmmSF_IILLzu7x8</string>
     <string name="app_name">Drunken Santa</string>
-    <string name="welcome">Welcome!</string>
     <string name="drunk">DRUNKEN SANTA</string>
     <string name="lives">LIVES</string>
     <string name="gameOver">GAME OVER</string>
+
     <string name="playAgain">PLAY AGAIN</string>
-    <string name="exitGame">EXIT GAME</string>
-    <string name="score">SCORE </string>
+    <string name="main_menu">MAIN MENU</string>
+    <string name="highscore">HIGH SCORE</string>
+
+    <string name="score">SCORE  </string>
+
+    <string name="enter_name">Please Enter Your Name</string>
+    <string name="name_hint">Enter name</string>
+    <string name="info">Info :</string>
+    <string name="music">Music</string>
+    <string name="accelerometer">Accelerometer</string>
+
+    <string name="how_to_play">HOW TO PLAY</string>
+    <string name="level">GAME LEVEL</string>
+    <string name="producer">PRODUCER</string>
+    <string name="setting_header">GAME SETTING</string>
+
+    <string name="level_easy">GAME LEVEL - EASY </string>
+    <string name="level_medium">GAME LEVEL - MEDIUM </string>
+    <string name="level_hard">GAME LEVEL - HARD </string>
+
+    <string name="infotext">Santa and his friends are in rehab, they aren\'t allowed to drink any kind of alcohol.\nMove Santa or one of his friend to left or right while taping on your touch screen device.\n\n\n
+    ©Jonathan Karta &amp; Gil Glick.
+    </string>
 </resources>
