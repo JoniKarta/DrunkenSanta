@@ -56,10 +56,10 @@ public class MainActivity extends AppCompatActivity {
     private Dialog settingDialog;
 
     /* Set the game easy by default */
-    private int level = GamePlayFinals.EASY;
+    private int level = GamePlayFinals.MEDIUM;
 
     /* Set the user's chosen level */
-    private int chosenLevel;
+    private int chosenLevel = GamePlayFinals.EASY;
 
     /* Set the user's sound choice */
     private boolean soundOn = true;
@@ -176,19 +176,23 @@ public class MainActivity extends AppCompatActivity {
 
             /* This event will show the player the game options .*/
             gameLevelButton.setOnClickListener((x) -> {
-                switch (level++ % GamePlayFinals.GAME_LEVELS_OPTIONS) {
-                    case GamePlayFinals.EASY:
-                        gameLevelButton.setText(R.string.level_easy);
-                        chosenLevel = GamePlayFinals.EASY;
+                switch (level % GamePlayFinals.GAME_LEVELS_OPTIONS) {
+                    case GamePlayFinals.HARD:
+                        gameLevelButton.setText(R.string.level_hard);
+                        chosenLevel = GamePlayFinals.HARD;
                         break;
                     case GamePlayFinals.MEDIUM:
                         gameLevelButton.setText(R.string.level_medium);
                         chosenLevel = GamePlayFinals.MEDIUM;
                         break;
-                    case GamePlayFinals.HARD:
-                        gameLevelButton.setText(R.string.level_hard);
-                        chosenLevel = GamePlayFinals.HARD;
+                    case GamePlayFinals.EASY:
+                        gameLevelButton.setText(R.string.level_easy);
+                        chosenLevel = GamePlayFinals.EASY;
                         break;
+                }
+                level--;
+                if(level < 0){
+                    level = GamePlayFinals.EASY;
                 }
             });
 
@@ -258,14 +262,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        if (introSong != null) {
-            introSong.start();
-        }
-    }
-
-    @Override
     public void onBackPressed() {
         new AlertDialog.Builder(this)
                 .setMessage("Are you sure you want to exit?")
@@ -277,6 +273,14 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
                 .setNegativeButton("No", (dialog, id) -> dialog.cancel()).show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (introSong != null) {
+            introSong.start();
+        }
     }
 
     @Override

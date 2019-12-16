@@ -80,34 +80,6 @@ public class EndGameActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-        new AlertDialog.Builder(this)
-                .setMessage("Are you sure you want to exit?")
-                .setCancelable(false)
-                .setPositiveButton("Yes", (dialog,id)->{
-                        if (endGameSong != null) { endGameSong.stop(); }
-                        finish();
-                })
-                .setNegativeButton("No", (dialog,id)-> dialog.cancel()).show();
-    }
-
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (endGameSong != null) {
-            endGameSong.pause();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (endGameSong != null) {
-            endGameSong.start();
-        }
-    }
     public void insertDataToDataBase() {
         if (gameDataBase.addData(gameUser)) {
             Toast.makeText(this, "Data insert successfully!", Toast.LENGTH_SHORT).show();
@@ -134,5 +106,36 @@ public class EndGameActivity extends AppCompatActivity {
             } while (cursor.moveToNext());
         }
         return cursorString;
+    }
+
+
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setMessage("Are you sure you want to exit?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", (dialog,id)->{
+                    if (endGameSong != null) { endGameSong.stop(); }
+                    finish();
+                })
+                .setNegativeButton("No", (dialog,id)-> dialog.cancel()).show();
+    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (endGameSong != null) {
+            endGameSong.pause();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (endGameSong != null) {
+            endGameSong.start();
+        }
     }
 }

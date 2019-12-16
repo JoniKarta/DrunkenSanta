@@ -68,7 +68,6 @@ public class GameManager {
   //  private SensorManager sensorManager;
 
     public GameManager(Context context,GameView gameView, GameUser gameUser) {
-//        this.context = HelperContext.getContext();
         this.context = context;
         this.gamePlayView = gameView;
         this.gameUser = gameUser;
@@ -79,7 +78,7 @@ public class GameManager {
 
     public void generateGame(int gameLevel) {
         player = gamePlayView.createPlayer(gameUser);
-        enemies = gamePlayView.createEnemies();
+        enemies = gamePlayView.createEnemies(gameLevel);
         heart = gamePlayView.createExtraLife();
         setLives(gamePlayView.getLifeList(), gameUser.getPlayerCharacter());
         runGame(gameLevel);
@@ -160,6 +159,7 @@ public class GameManager {
      */
     private void setRandomLoc(GameCharacter character) {
         character.setY(rand.nextInt(GamePlayFinals.BOTTOM_BOUND) - GamePlayFinals.TOP_BOUND);
+        character.setX(rand.nextInt(gamePlayView.getWidth()/GamePlayFinals.CALC_FRAME) * GamePlayFinals.CALC_FRAME);
     }
 
     /**

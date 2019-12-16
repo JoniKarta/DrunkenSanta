@@ -113,14 +113,14 @@ public class GameView extends LinearLayout {
     /**
      * This method handle the creation of all the enemies
      */
-    public GameCharacter[] createEnemies() {
+    public GameCharacter[] createEnemies(int gameLevel) {
         int[] images = {R.drawable.whisky, R.drawable.vodka, R.drawable.beers, R.drawable.bloodymary};
-        GameCharacter[] enemies = new GameCharacter[gamePlayFrame.getWidth() / GamePlayFinals.CALC_FRAME];
+        GameCharacter[] enemies = new GameCharacter[gamePlayFrame.getWidth() / GamePlayFinals.CALC_FRAME - gameLevel];
         for (int i = 0, current = 0; i < enemies.length; i++) {
             enemies[i] = new GameCharacter(getContext(), current,
                     rand.nextInt(GamePlayFinals.BOTTOM_BOUND) - GamePlayFinals.TOP_BOUND, GamePlayFinals.ENEMY_WIDTH, GamePlayFinals.ENEMY_HEIGHT);
             enemies[i].setBackgroundResource(images[rand.nextInt(images.length)]);
-            current = current + GamePlayFinals.CALC_FRAME;
+            current = rand.nextInt(gamePlayFrame.getWidth() / GamePlayFinals.CALC_FRAME) * GamePlayFinals.CALC_FRAME;
             gamePlayFrame.addView(enemies[i]);
         }
         return enemies;

@@ -47,9 +47,9 @@ public class GamePlayFinals {
     static final int INITIALIZED_SCORE = 0;
 
     /** Game levels variables */
-    static final int EASY = 0;
+    static final int EASY = 2;
     static final int MEDIUM = 1;
-    static final int HARD = 2;
+    static final int HARD = 0;
 
     /** Variable that indicate when the level's up*/
     static final int LEVEL_SPEED_UP = 20;
