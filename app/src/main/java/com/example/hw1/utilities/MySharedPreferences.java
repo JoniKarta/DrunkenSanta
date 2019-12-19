@@ -31,9 +31,8 @@ public class MySharedPreferences {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void add(GameUser gameUser, Comparator<GameUser> comparator) {
-            list = read();
+            list = readDataFromStorage();
             if (!list.contains(gameUser)) {
-                Log.i(null, "NOT INSIDE HERE");
                 list.add(gameUser);
                 list.sort(comparator);
                 writeDataToStorage(list);
@@ -58,11 +57,10 @@ public class MySharedPreferences {
         editor.apply();
     }
 
-    public ArrayList<GameUser> read() {
+    public ArrayList<GameUser> readDataFromStorage() {
         Gson gson = new Gson();
         String json = shared.getString("task_list", null);
-        Type type = new TypeToken<ArrayList<GameUser>>() {
-        }.getType();
+        Type type = new TypeToken<ArrayList<GameUser>>() {}.getType();
         if((list = gson.fromJson(json, type)) == null)
             list = new ArrayList<>();
         return list;

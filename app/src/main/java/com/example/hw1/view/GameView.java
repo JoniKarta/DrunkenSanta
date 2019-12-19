@@ -98,7 +98,7 @@ public class GameView extends LinearLayout {
 
     private ImageView createLife() {
         ImageView life = new ImageView(getContext());
-        life.setLayoutParams(new android.view.ViewGroup.LayoutParams(GamePlayFinals.LIVES_WIDTH, GamePlayFinals.LIVES_HEIGHT));
+        life.setLayoutParams(new android.view.ViewGroup.LayoutParams(GamePlayFinals.ELEMENT_WIDTH, GamePlayFinals.ELEMENT_HEIGHT));
         return life;
     }
 
@@ -129,12 +129,20 @@ public class GameView extends LinearLayout {
     public ImageView createExtraLife() {
         ImageView extraLife = new ImageView(getContext());
         extraLife.setImageResource(R.drawable.heart);
-        extraLife.setLayoutParams(new android.view.ViewGroup.LayoutParams(GamePlayFinals.LIVES_WIDTH, GamePlayFinals.LIVES_HEIGHT));
+        extraLife.setLayoutParams(new android.view.ViewGroup.LayoutParams(GamePlayFinals.ELEMENT_WIDTH, GamePlayFinals.ELEMENT_HEIGHT));
         extraLife.setVisibility(View.INVISIBLE);
         gamePlayFrame.addView(extraLife);
         return extraLife;
     }
 
+    public ImageView createMoneyBag(){
+        ImageView moneyBag = new ImageView(getContext());
+        moneyBag.setImageResource(R.drawable.money);
+        moneyBag.setLayoutParams(new android.view.ViewGroup.LayoutParams(GamePlayFinals.ELEMENT_WIDTH, GamePlayFinals.ELEMENT_HEIGHT));
+        moneyBag.setVisibility(View.INVISIBLE);
+        gamePlayFrame.addView(moneyBag);
+        return moneyBag;
+    }
 
     public FrameLayout getGamePlayFrame() {
         return gamePlayFrame;

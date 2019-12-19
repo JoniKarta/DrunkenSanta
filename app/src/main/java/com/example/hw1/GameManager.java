@@ -2,7 +2,6 @@ package com.example.hw1;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -55,19 +54,31 @@ public class GameManager {
      */
     private GameView gamePlayView;
 
-
+    /**
+     * Sound effect in the game
+     */
     private MediaPlayer boomEffect;
     private MediaPlayer addLifeSoundEffect;
 
+    // Object hold all the data of the user whose playing the game
     private GameUser gameUser;
 
+    /**
+     * Starting speed of the game
+     */
     private int gameLevel = GamePlayFinals.GAME_STARTING_SPEED;
 
+    /**
+     * View Element in the game
+     */
     private ImageView heart;
+    private ImageView coins;
     private volatile boolean lifeExist = false;
-  //  private SensorManager sensorManager;
+    private volatile boolean coinExist= false;
 
-    public GameManager(Context context,GameView gameView, GameUser gameUser) {
+
+
+    public GameManager(Context context, GameView gameView, GameUser gameUser) {
         this.context = context;
         this.gamePlayView = gameView;
         this.gameUser = gameUser;
@@ -81,6 +92,7 @@ public class GameManager {
         enemies = gamePlayView.createEnemies(gameLevel);
         heart = gamePlayView.createExtraLife();
         setLives(gamePlayView.getLifeList(), gameUser.getPlayerCharacter());
+        coins = gamePlayView.createMoneyBag();
         runGame(gameLevel);
     }
 
@@ -128,12 +140,8 @@ public class GameManager {
                         boomEffect.start();
                         playerGetsHit();
                     }
-                    if (!lifeExist)
-                        lifeExist = raffleLife();
-                    if (lifeExist) {
-                        heartCollision();
-                        moveDown();
-                    }
+                    randomizeLife();
+                    randomizeCoins();
                 });
             }
         };
@@ -159,7 +167,7 @@ public class GameManager {
      */
     private void setRandomLoc(GameCharacter character) {
         character.setY(rand.nextInt(GamePlayFinals.BOTTOM_BOUND) - GamePlayFinals.TOP_BOUND);
-        character.setX(rand.nextInt(gamePlayView.getWidth()/GamePlayFinals.CALC_FRAME) * GamePlayFinals.CALC_FRAME);
+        character.setX(rand.nextInt(gamePlayView.getWidth() / GamePlayFinals.CALC_FRAME) * GamePlayFinals.CALC_FRAME);
     }
 
     /**
@@ -169,9 +177,7 @@ public class GameManager {
      */
     private boolean detectCollision() {
         for (GameCharacter enemy : enemies) {
-            if (enemy.getY() + enemy.getHeight() - 50 > player.getY() && enemy.getY() <= player.getY()
-                    && (enemy.getX() >= player.getX() && enemy.getX() <= player.getX() + player.getWidth()
-                    || enemy.getX() <= player.getX() && enemy.getX() + enemy.getWidth() >= player.getX())) {
+            if (collisionDetection(enemy, player)) {
                 setRandomLoc(enemy);
                 return true;
             }
@@ -216,8 +222,11 @@ public class GameManager {
         }
     }
 
+    /**
+     * Create random life to the player
+     */
     private boolean raffleLife() {
-        if (rand.nextInt(500) == 10) {
+        if (rand.nextInt(800) == 10) {
             heart.setX(rand.nextInt(gamePlayView.getWidth() / GamePlayFinals.PLAYER_WIDTH) * GamePlayFinals.PLAYER_WIDTH);
             heart.setY(rand.nextInt(GamePlayFinals.BOTTOM_BOUND) - GamePlayFinals.TOP_BOUND);
             heart.setVisibility(View.VISIBLE);
@@ -226,6 +235,9 @@ public class GameManager {
         return false;
     }
 
+    /**
+     * Move the life down on the screen
+     */
     private void moveDown() {
         if (heart.getY() - player.getWidth() > player.getY()) {
             heart.setVisibility(View.INVISIBLE);
@@ -235,31 +247,112 @@ public class GameManager {
 
     }
 
-    private void heartCollision() {
-        if (heart.getVisibility() == View.VISIBLE) {
-            if (heart.getY() + heart.getHeight() - 50 > player.getY() && heart.getY() <= player.getY()
-                    && (heart.getX() >= player.getX() && heart.getX() <= player.getX() + player.getWidth()
-                    || heart.getX() <= player.getX() && heart.getX() + heart.getWidth() >= player.getX())) {
-                addPlayerLife();
-                heart.setY(0);
-                heart.setVisibility(View.INVISIBLE);
-            }
+    /**
+     * Detect collision of the player with the heart.
+     */
+    private boolean heartCollision() {
+        if (heart.getVisibility() == View.VISIBLE && collisionDetection(heart, player)) {
+            heart.setY(0);
+            heart.setVisibility(View.INVISIBLE);
+            return true;
         }
+        return false;
     }
 
+    /**
+     * If collision detected the user gets another life, else the user gets nothing.
+     * If the user have already three life he also gets nothing.
+     */
     private void addPlayerLife() {
         if (numOfLives < GamePlayFinals.NUM_OF_LIVES) {
             gamePlayView.getLifeList()[numOfLives].setVisibility(View.VISIBLE);
             addLifeSoundEffect.start();
             numOfLives++;
         }
+    }
+    private void randomizeLife(){
+        if (!lifeExist)
+            lifeExist = raffleLife();
+        if (lifeExist && heartCollision()) {
+            addPlayerLife();
+        } else {
+            moveDown();
+
+        }
+    }
+
+    /**
+     * Create random life to the player
+     */
+    private boolean raffleCoin() {
+        if (rand.nextInt(500) == 10) {
+            coins.setX(rand.nextInt(gamePlayView.getWidth() / GamePlayFinals.PLAYER_WIDTH) * GamePlayFinals.PLAYER_WIDTH);
+            coins.setY(rand.nextInt(GamePlayFinals.BOTTOM_BOUND) - GamePlayFinals.TOP_BOUND);
+            coins.setVisibility(View.VISIBLE);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Move the life down on the screen
+     */
+    private void coinsMoveDown() {
+        if (coins.getY() - player.getWidth() > player.getY()) {
+            coins.setVisibility(View.INVISIBLE);
+            coinExist = false;
+        }
+        coins.setY(coins.getY() + 7);
 
     }
 
+    /**
+     * Detect collision of the player with the heart.
+     */
+    private boolean coinCollision() {
+        if (coins.getVisibility() == View.VISIBLE && collisionDetection(coins, player)) {
+            coins.setY(0);
+            coins.setVisibility(View.INVISIBLE);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * If collision detected the user gets another life, else the user gets nothing.
+     * If the user have already three life he also gets nothing.
+     */
+    private void addPlayerCoins() {
+        gameScore += 10;
+    }
+
+    private void randomizeCoins(){
+        if (!coinExist)
+            coinExist = raffleCoin();
+        if (coinExist && coinCollision()) {
+            addPlayerCoins();
+        } else {
+            coinsMoveDown();
+        }
+    }
     public void setGameStatus(boolean playing) {
         this.playing = playing;
     }
 
+
+    private boolean collisionDetection(ImageView collideElement, ImageView player) {
+        return collideElement.getY() + collideElement.getHeight() - 50 > player.getY()
+                && collideElement.getY() <= player.getY()
+                && (collideElement.getX() >= player.getX() &&
+                collideElement.getX() <= player.getX() + player.getWidth()
+                || collideElement.getX() <= player.getX()
+                && collideElement.getX() + collideElement.getWidth() >= player.getX());
+
+    }
+
+    /**
+     * Accelerometer working partially
+     */
 
     public void playerAccelerometer(float x) {
         if (player.getX() <= gamePlayView.getWidth() - player.getWidth() && player.getX() >= 0) {
@@ -272,10 +365,6 @@ public class GameManager {
         }
     }
 
-
-
-
-
     /**
      * If game over detected move to game over view
      */
@@ -285,7 +374,7 @@ public class GameManager {
         Intent intent = new Intent(context, EndGameActivity.class);
         intent.putExtra(GamePlayFinals.USER_OBJECT, gameUser);
         context.startActivity(intent);
-        ((GamePlayActivity)context).finish();
+        ((GamePlayActivity) context).finish();
 
     }
 
@@ -294,4 +383,6 @@ public class GameManager {
         playing = false;
         numOfLives = GamePlayFinals.NUM_OF_LIVES;
     }
+
+
 }

@@ -10,7 +10,7 @@
     <string name="highscore">HIGH SCORE</string>
 
     <string name="score">SCORE  </string>
-
+    <string name="show_player_location">DISPLAY LOCATION</string>
     <string name="enter_name">Please Enter Your Name</string>
     <string name="name_hint">Enter name</string>
     <string name="info">Info :</string>

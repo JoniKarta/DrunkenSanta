@@ -8,40 +8,31 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.hw1.view.HighScoreFragment;
 import com.example.hw1.view.UserMapFragment;
 
-
-public class HighScoreActivity extends AppCompatActivity {
+public class HighScoreActivity extends AppCompatActivity implements HighScoreFragment.FragmentHighScoreListener{
 
 
     private FragmentManager fragmentManager;
-
     private FragmentTransaction fragmentTransaction;
+    private UserMapFragment mapFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragments_holder);
-        addHighScoreFragment();
-       // addMapFragment();
+        addFragments();
     }
 
     // This function add the game score fragment to the HighScoreActivity
-    public void addHighScoreFragment(){
+    public void addFragments(){
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
-        HighScoreFragment highScore = new HighScoreFragment();
-        fragmentTransaction.add(R.id.highScoreLayout, highScore);
+        HighScoreFragment highScoreFragment = new HighScoreFragment();
+        mapFragment = new UserMapFragment();
+        fragmentTransaction.add(R.id.highScoreLayout, highScoreFragment).add(R.id.mapLayout, mapFragment);
         fragmentTransaction.commit();
 
     }
 
-    // This function add the map fragment to the HighScoreActivity
-    public void addMapFragment(){
-        fragmentManager = getSupportFragmentManager();
-        fragmentTransaction = fragmentManager.beginTransaction();
-        UserMapFragment mapFragment1 = new UserMapFragment();
-        fragmentTransaction.add(R.id.mapLayout, mapFragment1);
-        fragmentTransaction.commit();
-    }
     @Override
     public void onBackPressed() {
         fragmentTransaction.addToBackStack(null);
@@ -54,8 +45,10 @@ public class HighScoreActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
+    public void onGameUserInfoSent(GameUser user) {
+        mapFragment.getGameUserInfo(user);
+        mapFragment.setButtonText(user.getUserName());
     }
+
+
 }

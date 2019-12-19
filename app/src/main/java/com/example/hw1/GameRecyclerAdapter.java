@@ -16,12 +16,21 @@ import java.util.ArrayList;
 public class GameRecyclerAdapter extends RecyclerView.Adapter<GameRecyclerAdapter.ScoreViewHolder> {
     private ArrayList<GameUser> mExampleList;
     private Context context;
+    private OnItemClickListener mListener;
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mListener = listener;
+    }
 
     public GameRecyclerAdapter(Context context, ArrayList<GameUser> exampleList) {
         this.context = context;
-        if(exampleList != null){
+        if (exampleList != null) {
             mExampleList = exampleList;
-        }else{
+        } else {
             mExampleList = new ArrayList<>();
         }
     }
@@ -30,7 +39,7 @@ public class GameRecyclerAdapter extends RecyclerView.Adapter<GameRecyclerAdapte
     @Override
     public ScoreViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(context).inflate(R.layout.item, parent, false);
-        return new ScoreViewHolder(v);
+        return new ScoreViewHolder(v, mListener);
     }
 
     @SuppressLint("SetTextI18n")
@@ -52,12 +61,19 @@ public class GameRecyclerAdapter extends RecyclerView.Adapter<GameRecyclerAdapte
         private TextView mTextView1;
         private TextView mScore;
 
-
-        public ScoreViewHolder(@NonNull View itemView) {
+        public ScoreViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.imageView);
             mTextView1 = itemView.findViewById(R.id.textView);
             mScore = itemView.findViewById(R.id.textScore);
+            itemView.setOnClickListener(e -> {
+                if (listener != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        listener.onItemClick(position);
+                    }
+                }
+            });
         }
     }
 

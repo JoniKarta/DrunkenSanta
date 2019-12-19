@@ -18,10 +18,10 @@ public class GamePlayFinals {
     public static final int ENEMY_WIDTH = 140;
 
     /** Specify fixed size for the lives image height */
-    public static final int LIVES_HEIGHT = 100;
+    public static final int ELEMENT_HEIGHT = 100;
 
     /** Specify fixed size for the lives image width */
-    public static final int LIVES_WIDTH = 100;
+    public static final int ELEMENT_WIDTH = 100;
 
 
     /** Define the number of lives the user start with */
@@ -41,35 +41,34 @@ public class GamePlayFinals {
     public static final int SCORE_TEXT_SIZE = 15;
 
     /** Fixed Range for the enemy's movements*/
-    static final int Y_ENEMY_DISTANCE = 10;
+    public static final int Y_ENEMY_DISTANCE = 10;
 
     /** Initializing the socre of the player to 0*/
-    static final int INITIALIZED_SCORE = 0;
+    public static final int INITIALIZED_SCORE = 0;
 
     /** Game levels variables */
-    static final int EASY = 2;
-    static final int MEDIUM = 1;
-    static final int HARD = 0;
+    public static final int EASY = 2;
+    public static final int MEDIUM = 1;
+    public static final int HARD = 0;
 
     /** Variable that indicate when the level's up*/
-    static final int LEVEL_SPEED_UP = 20;
+    public static final int LEVEL_SPEED_UP = 20;
 
     /**The maximum speed of the last level the game can hold*/
-    static final int MAX_GAME_SPEED = 5;
+    public static final int MAX_GAME_SPEED = 5;
 
     /** Initialize the starting speed of the game */
-    static final int GAME_STARTING_SPEED = 30;
+    public static final int GAME_STARTING_SPEED = 30;
 
     /** THREE OPTIONS TO THE GAME IS HARDNESS */
-    static final int GAME_LEVELS_OPTIONS = 3;
-
+    public static final int GAME_LEVELS_OPTIONS = 3;
 
 
 
     public static final String MUSIC_SERVICE = "Music";
+    public static final String ACCELEROMETER_SERVICE = "Accelerometer_service";
     public static final String GAME_LEVEL = "GameLevel";
     public static final String USER_OBJECT = "User";
-    public static final String ACCELEROMETER_SERVICE = "Accelerometer_service";
 
     public static final int LINEAR_PARENT = LinearLayout.LayoutParams.MATCH_PARENT;
     public static final int LINEAR_WRAPPED = LinearLayout.LayoutParams.WRAP_CONTENT;

@@ -41,7 +41,8 @@ public class GamePlayActivity extends AppCompatActivity implements SensorEventLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         configGameWindow();
-        setContentView(gameView = new GameView(this));
+        gameView = new GameView(this);
+        setContentView(gameView);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         gamePlaySong = MediaPlayer.create(this, R.raw.gamesong);
         gameView.post(this::runGame);
@@ -67,7 +68,7 @@ public class GamePlayActivity extends AppCompatActivity implements SensorEventLi
         }
         GameUser gameUser = getIntent().getParcelableExtra(GamePlayFinals.USER_OBJECT);
         if (gameUser != null) {
-            gameManager = new GameManager(this,gameView, gameUser);
+            gameManager = new GameManager(this, gameView, gameUser);
             gameManager.generateGame(getIntent().getIntExtra(GamePlayFinals.GAME_LEVEL, GamePlayFinals.EASY));
         }
 
@@ -92,7 +93,7 @@ public class GamePlayActivity extends AppCompatActivity implements SensorEventLi
     @Override
     protected void onStop() {
         super.onStop();
-        if(accelerometerOn) {
+        if (accelerometerOn) {
             sensorManager.unregisterListener(this);
         }
         if (gameManager != null && gamePlaySong != null) {
@@ -115,8 +116,8 @@ public class GamePlayActivity extends AppCompatActivity implements SensorEventLi
     @Override
     protected void onStart() {
         super.onStart();
-        accelerometerOn = getIntent().getBooleanExtra(GamePlayFinals.ACCELEROMETER_SERVICE,false);
-        if(accelerometerOn){
+        accelerometerOn = getIntent().getBooleanExtra(GamePlayFinals.ACCELEROMETER_SERVICE, false);
+        if (accelerometerOn) {
             sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
         }
 
@@ -130,11 +131,9 @@ public class GamePlayActivity extends AppCompatActivity implements SensorEventLi
     @Override
     public void onSensorChanged(SensorEvent event) {
         float accelerationX;
-        //float accelerationY;
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             accelerationX = event.values[0];
-            //accelerationY = -event.values[1];
-            if (gameManager != null ) {
+            if (gameManager != null) {
                 gameManager.playerAccelerometer(accelerationX);
             }
         }
